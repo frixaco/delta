@@ -1,60 +1,18 @@
-mod align;
-mod ansi;
-mod cli;
-mod color;
-mod colors;
-mod config;
-mod delta;
-mod edits;
-mod env;
-mod features;
-mod format;
-mod git_config;
-mod handlers;
-mod minusplus;
-mod options;
-mod paint;
-mod parse_style;
-mod parse_styles;
-mod style;
-mod utils;
-mod wrapping;
-
-mod subcommands;
-
-mod tests;
-
 use std::ffi::{OsStr, OsString};
 use std::io::{self, BufRead, Cursor, ErrorKind, IsTerminal, Write};
 use std::process::{self, Command, Stdio};
 
 use bytelines::ByteLinesReader;
 
-use crate::cli::Call;
-use crate::config::delta_unreachable;
-use crate::delta::delta;
-use crate::subcommands::{SubCmdKind, SubCommand};
-use crate::utils::bat::assets::list_languages;
-use crate::utils::bat::output::{OutputType, PagingMode};
-
-pub fn fatal<T>(errmsg: T) -> !
-where
-    T: AsRef<str> + std::fmt::Display,
-{
-    #[cfg(not(test))]
-    {
-        eprintln!("{errmsg}");
-        // As in Config::error_exit_code: use 2 for error
-        // because diff uses 0 and 1 for non-error.
-        process::exit(2);
-    }
-    #[cfg(test)]
-    panic!("{}\n", errmsg);
-}
-
-pub mod errors {
-    pub use anyhow::{anyhow, Context, Error, Result};
-}
+use delta::cli::{self, Call};
+use delta::config::{self, delta_unreachable};
+use delta::delta::delta;
+use delta::env;
+use delta::fatal;
+use delta::subcommands::{self, SubCmdKind, SubCommand};
+use delta::utils;
+use delta::utils::bat::assets::list_languages;
+use delta::utils::bat::output::{OutputType, PagingMode};
 
 #[cfg(not(tarpaulin_include))]
 fn main() -> std::io::Result<()> {

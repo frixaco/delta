@@ -12,6 +12,6 @@ pub mod show_themes;
 pub mod diff;
 mod external;
 pub(crate) use external::extract;
-pub(crate) use external::SubCmdKind;
-pub(crate) use external::SubCommand;
+pub use external::SubCmdKind;
+pub use external::SubCommand;
 pub(crate) use external::SUBCOMMANDS;
